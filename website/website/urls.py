@@ -19,9 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import RedirectView
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
 urlpatterns = [
@@ -29,14 +29,11 @@ urlpatterns = [
     path("api/", include("website.api")),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
+    path("sitemap.xml", sitemap),
+    path("blog/", include("apps.blog.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-urlpatterns += [
-    path("", RedirectView.as_view(pattern_name="polls:spa")),
-    path("app/", include("apps.polls.urls")),
-]
 
 urlpatterns += [
     path("", include(wagtail_urls)),

@@ -22,3 +22,12 @@ WAGTAILDOCS_EXTENSIONS = [
 ]
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
+
+# Social share image rendition used by wagtail-metadata (og:image and
+# twitter:image). 1200x630 is the recommended Open Graph size.
+WAGTAILMETADATA_IMAGE_FILTER = "fill-1200x630"
+
+# wagtailcodeblock loads PrismJS and this theme from its CDN on pages that
+# contain a code block. Options: None (default), "coy", "dark", "funky",
+# "okaidia", "solarizedlight", "twilight".
+WAGTAIL_CODE_BLOCK_THEME = "okaidia"

@@ -1,0 +1,49 @@
+{% extends "cms/base.html" %}
+{% load i18n wagtailcore_tags wagtailimages_tags social_share %}
+
+{% block content %}
+<article>
+    <header>
+        <div class="mx-auto max-w-3xl">
+            <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:'DATE_FORMAT' }}</time>
+                {% if page.owner %}
+                    &middot; {{ page.owner.get_full_name|default:page.owner.get_username }}
+                {% endif %}
+            </p>
+            <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tighter text-balance sm:text-5xl">{{ page.title }}</h1>
+            {% if page.tags.all %}
+                <p class="mt-4 flex flex-wrap gap-x-4 text-sm text-muted-foreground">
+                    {% for tag in page.tags.all %}<span>#{{ tag.name }}</span>{% endfor %}
+                </p>
+            {% endif %}
+            <div class="mt-6 flex flex-wrap items-center gap-2">
+                <span class="mr-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">{% translate "Share" %}:</span>
+                {% with share_class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground" %}
+                    {% post_to_twitter page.title page.full_url "X" share_class %}
+                    {% post_to_linkedin page.full_url share_class %}
+                    {% post_to_facebook page.full_url "Facebook" share_class %}
+                    {% post_to_telegram page.title page.full_url "Telegram" share_class %}
+                    {% post_to_whatsapp page.full_url "WhatsApp" share_class %}
+                    {% post_to_reddit page.title page.full_url "Reddit" share_class %}
+                {% endwith %}
+            </div>
+        </div>
+        {% if page.hero_image %}
+            <figure class="mt-10">
+                {% image page.hero_image width-1400 alt=page.title class="w-full object-cover" %}
+            </figure>
+        {% endif %}
+    </header>
+
+    {% if page.excerpt %}
+        <p class="mx-auto mt-10 max-w-3xl text-lg leading-relaxed text-muted-foreground">{{ page.excerpt }}</p>
+    {% endif %}
+
+    <div class="prose mx-auto mt-10 max-w-3xl">
+        {% for block in page.body %}
+            {% include_block block %}
+        {% endfor %}
+    </div>
+</article>
+{% endblock %}

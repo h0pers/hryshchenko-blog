@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load wagtailmetadata_tags %}
+
+{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}{% endblock %}
+
+{% block meta %}
+    {% meta_tags page %}
+{% endblock %}

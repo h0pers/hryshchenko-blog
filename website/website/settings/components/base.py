@@ -12,6 +12,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sitemaps",
     "django.contrib.staticfiles",
     # Wagtail
     "wagtail.contrib.forms",
@@ -24,14 +25,20 @@ INSTALLED_APPS = [
     "wagtail.images",
     "wagtail.search",
     "wagtail.admin",
+    "wagtail.contrib.settings",
+    "wagtail.contrib.table_block",
     "wagtail",
+    "wagtailcodeblock",
+    "wagtailmarkdown",
+    "wagtailmetadata",
     "modelcluster",
     "taggit",
     "django_vite",
+    "django_social_share",
     # Custom apps
     "apps.core.apps.CoreConfig",
     "apps.cms.apps.CmsConfig",
-    "apps.polls.apps.PollsConfig",
+    "apps.blog.apps.BlogConfig",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +65,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "wagtail.contrib.settings.context_processors.settings",
             ],
         },
     },

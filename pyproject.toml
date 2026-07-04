@@ -17,6 +17,12 @@ dependencies = [
     "pytest-django>=4.11.1",
     "ruff>=0.14.10",
     "secure>=1.0.1",
+    "wagtail-markdown>=0.14.1",
+    "factory-boy>=3.3.3",
+    "wagtail-factories>=4.5.0",
+    "django-social-share>=2.3.0",
+    "wagtailcodeblock>=1.30.0.0",
+    "wagtail-metadata>=5.0.0",
 ]
 
 [tool.ruff]

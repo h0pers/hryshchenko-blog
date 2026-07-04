@@ -1,6 +1,32 @@
-{% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% extends "cms/base.html" %}
+{% load i18n wagtailcore_tags wagtailimages_tags django_vite %}
+
+{% block extra_css %}
+    {% vite_asset 'src/entries/home.js' %}
+{% endblock %}
 
 {% block content %}
-    {{ page.body|richtext }}
+<section data-hero class="@container grid min-h-[calc(100svh-6.5rem)] content-center justify-items-center gap-10 border-b border-border pb-16 text-center lg:grid-cols-[1fr_auto] lg:items-start lg:justify-items-start lg:gap-x-14 lg:text-left">
+    {% if page.picture %}
+        <div data-hero-image class="relative aspect-4/5 w-56 md:w-64 xl:w-80 lg:col-start-2 lg:row-start-2">
+            <div data-depth="0.4" class="absolute inset-0">
+                {% image page.picture fill-640x800 alt=page.title class="h-full w-full object-cover contrast-125" %}
+            </div>
+            <div data-depth="0.8" class="absolute inset-0">
+                <span class="hero-dot" aria-hidden="true"></span>
+            </div>
+        </div>
+    {% endif %}
+    <h1 class="hero-title text-[min(3.75rem,8.5cqw)] leading-none text-balance text-foreground lg:col-span-2 lg:text-[min(7rem,8.5cqw)]">{% firstof page.name page.title %}</h1>
+    {% if page.body %}
+        <div class="prose prose-sm max-w-xl lg:col-start-1 lg:row-start-2">{{ page.body|richtext }}</div>
+    {% endif %}
+</section>
+
+<section class="pt-16">
+    <h2 class="text-xs font-medium uppercase tracking-widest text-muted-foreground">{% translate "Writing" %}</h2>
+    {% include "blog/includes/post_list.html" %}
+    <div id="post-feed-island"></div>
+    {% vite_asset 'src/entries/post-feed.js' %}
+</section>
 {% endblock %}

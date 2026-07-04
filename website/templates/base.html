@@ -1,0 +1,65 @@
+{% load django_vite %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    {% block meta %}{% endblock %}
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'blog:feed' %}">
+    <script>
+        (function () {
+            const root = document.documentElement;
+            root.classList.add('js');
+            const stored = localStorage.getItem('theme');
+            const dark = stored
+                ? stored === 'dark'
+                : window.matchMedia('(prefers-color-scheme: dark)').matches;
+            root.classList.toggle('dark', dark);
+        })();
+    </script>
+    <style>
+        #page-loader { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: #ffffff; }
+        .js #page-loader { display: flex; }
+        .dark #page-loader { background: #1b1b1b; }
+        #page-loader .page-loader-square { width: 1rem; height: 1rem; background: #000000; }
+        .dark #page-loader .page-loader-square { background: #f5f5f5; }
+    </style>
+    {% vite_hmr_client %}
+    {% vite_asset 'src/entries/main.js' %}
+    {% vite_asset 'src/entries/theme-toggle.js' %}
+    {% vite_asset 'src/entries/rss-link.js' %}
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
+    <div id="page-loader" aria-hidden="true">
+        <span class="page-loader-square"></span>
+    </div>
+    <header class="sticky top-0 z-40 border-b border-border bg-background">
+        <div class="mx-auto flex h-14 w-full max-w-3xl xl:max-w-5xl 2xl:max-w-6xl items-center justify-between px-4 sm:px-6">
+            <a href="/" class="font-display text-lg font-semibold tracking-tight">hryshchenko</a>
+            <div class="flex items-center gap-1">
+                <div id="rss-link-island" data-feed-url="{% url 'blog:feed' %}"></div>
+                <div id="theme-toggle-island"></div>
+            </div>
+        </div>
+    </header>
+    <main class="mx-auto w-full max-w-3xl xl:max-w-5xl 2xl:max-w-6xl flex-1 px-4 py-12 sm:px-6">
+        {% block content %}{% endblock %}
+    </main>
+    <footer data-site-footer class="border-t border-border bg-background">
+        <div class="mx-auto flex w-full max-w-3xl xl:max-w-5xl 2xl:max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-6 text-xs text-muted-foreground sm:px-6">
+            <span>&copy; {% now "Y" %} Dmytro Hryshchenko</span>
+            <span class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                {% if settings.cms.SiteSettings.email %}
+                    <a href="mailto:{{ settings.cms.SiteSettings.email }}" class="underline-offset-4 hover:underline">{{ settings.cms.SiteSettings.email }}</a>
+                {% endif %}
+                {% for link in settings.cms.SiteSettings.links.all %}
+                    <a href="{{ link.url }}" rel="me noopener" target="_blank" class="underline-offset-4 hover:underline">{{ link.label }}</a>
+                {% endfor %}
+            </span>
+        </div>
+    </footer>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
