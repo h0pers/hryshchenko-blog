@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400..700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -11,38 +11,38 @@
 :root {
   --header-height: 3rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.2046 0 0);
+  --foreground: oklch(0 0 0);
   --card: oklch(0.9702 0 0);
-  --card-foreground: oklch(0.2046 0 0);
+  --card-foreground: oklch(0 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2046 0 0);
-  --primary: oklch(0.8606 0.1731 91.9357);
-  --primary-foreground: oklch(0.2046 0 0);
+  --popover-foreground: oklch(0 0 0);
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.9219 0 0);
-  --secondary-foreground: oklch(0.2046 0 0);
+  --secondary-foreground: oklch(0 0 0);
   --muted: oklch(0.9702 0 0);
-  --muted-foreground: oklch(0.5555 0 0);
-  --accent: oklch(0.8606 0.1731 91.9357);
-  --accent-foreground: oklch(0.2046 0 0);
-  --destructive: oklch(0.6368 0.2078 25.3313);
+  --muted-foreground: oklch(0.4386 0 0);
+  --accent: oklch(0.9491 0 0);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.3715 0 0);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.9219 0 0);
   --input: oklch(0.9219 0 0);
-  --ring: oklch(0.8606 0.1731 91.9357);
-  --chart-1: oklch(0.8606 0.1731 91.9357);
-  --chart-2: oklch(0.5555 0 0);
+  --ring: oklch(0 0 0);
+  --chart-1: oklch(0 0 0);
+  --chart-2: oklch(0.4386 0 0);
   --chart-3: oklch(0.3715 0 0);
   --chart-4: oklch(0.7155 0 0);
   --chart-5: oklch(0.8699 0 0);
   --sidebar: oklch(0.9851 0 0);
-  --sidebar-foreground: oklch(0.2046 0 0);
-  --sidebar-primary: oklch(0.8606 0.1731 91.9357);
-  --sidebar-primary-foreground: oklch(0.2046 0 0);
+  --sidebar-foreground: oklch(0 0 0);
+  --sidebar-primary: oklch(0 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.9702 0 0);
-  --sidebar-accent-foreground: oklch(0.2046 0 0);
+  --sidebar-accent-foreground: oklch(0 0 0);
   --sidebar-border: oklch(0.9219 0 0);
-  --sidebar-ring: oklch(0.8606 0.1731 91.9357);
-  --font-sans: Inter, system-ui, sans-serif;
+  --sidebar-ring: oklch(0 0 0);
+  --font-sans: 'Helvetica Neue', Helvetica, Arimo, Arial, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, Menlo, monospace;
   --radius: 0.5rem;
@@ -59,39 +59,39 @@
 }
 
 .dark {
-  --background: oklch(0.1822 0 0);
-  --foreground: oklch(0.9491 0 0);
-  --card: oklch(0.235 0 0);
-  --card-foreground: oklch(0.9491 0 0);
-  --popover: oklch(0.235 0 0);
-  --popover-foreground: oklch(0.9491 0 0);
-  --primary: oklch(0.8606 0.1731 91.9357);
-  --primary-foreground: oklch(0.1822 0 0);
+  --background: oklch(0.2046 0 0);
+  --foreground: oklch(0.9702 0 0);
+  --card: oklch(0.25 0 0);
+  --card-foreground: oklch(0.9702 0 0);
+  --popover: oklch(0.25 0 0);
+  --popover-foreground: oklch(0.9702 0 0);
+  --primary: oklch(0.9702 0 0);
+  --primary-foreground: oklch(0.2046 0 0);
   --secondary: oklch(0.285 0 0);
-  --secondary-foreground: oklch(0.9491 0 0);
+  --secondary-foreground: oklch(0.9702 0 0);
   --muted: oklch(0.2686 0 0);
   --muted-foreground: oklch(0.7155 0 0);
   --accent: oklch(0.285 0 0);
-  --accent-foreground: oklch(0.8606 0.1731 91.9357);
-  --destructive: oklch(0.7106 0.1661 22.2162);
-  --destructive-foreground: oklch(0.1822 0 0);
+  --accent-foreground: oklch(0.9702 0 0);
+  --destructive: oklch(0.7155 0 0);
+  --destructive-foreground: oklch(0.2046 0 0);
   --border: oklch(0.3211 0 0);
   --input: oklch(0.3211 0 0);
-  --ring: oklch(0.8606 0.1731 91.9357);
-  --chart-1: oklch(0.8606 0.1731 91.9357);
+  --ring: oklch(0.9702 0 0);
+  --chart-1: oklch(0.9702 0 0);
   --chart-2: oklch(0.4386 0 0);
   --chart-3: oklch(0.5555 0 0);
   --chart-4: oklch(0.3715 0 0);
   --chart-5: oklch(0.2686 0 0);
-  --sidebar: oklch(0.1591 0 0);
+  --sidebar: oklch(0.1822 0 0);
   --sidebar-foreground: oklch(0.8699 0 0);
-  --sidebar-primary: oklch(0.8606 0.1731 91.9357);
-  --sidebar-primary-foreground: oklch(0.1822 0 0);
-  --sidebar-accent: oklch(0.235 0 0);
-  --sidebar-accent-foreground: oklch(0.8606 0.1731 91.9357);
+  --sidebar-primary: oklch(0.9702 0 0);
+  --sidebar-primary-foreground: oklch(0.2046 0 0);
+  --sidebar-accent: oklch(0.25 0 0);
+  --sidebar-accent-foreground: oklch(0.9702 0 0);
   --sidebar-border: oklch(0.2686 0 0);
-  --sidebar-ring: oklch(0.8606 0.1731 91.9357);
-  --font-sans: Inter, -apple-system, sans-serif;
+  --sidebar-ring: oklch(0.9702 0 0);
+  --font-sans: 'Helvetica Neue', Helvetica, Arimo, Arial, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, SFMono-Regular, monospace;
   --radius: 0.375rem;
@@ -138,11 +138,10 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --color-brand: #facc15;
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Helvetica Neue', Helvetica, Arimo, Arial, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -184,3 +183,77 @@
 /* Defaults hover styles on all devices */
 @custom-variant hover (&:hover);
 
+/* Monochrome typography: point every prose color at the theme's grayscale
+   tokens so rich text follows the light/dark palette. Deliberately NOT in a
+   @layer: the typography plugin sets its own defaults in the utilities
+   layer, and only unlayered rules reliably override them. */
+.prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--foreground);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--background);
+  --tw-prose-pre-bg: var(--foreground);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
+.prose :is(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Full-screen loading overlay. Hidden without JS (crawlers and no-JS
+   visitors see the page directly); main.js adds .js to <html> on startup
+   and fades the overlay out once the window 'load' event fires. */
+#page-loader {
+  display: none;
+}
+
+.js #page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.js #page-loader.page-loader-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page-loader-square {
+  width: 1rem;
+  height: 1rem;
+  background: var(--foreground);
+  animation: page-loader-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes page-loader-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loader-square {
+    animation: none;
+  }
+}

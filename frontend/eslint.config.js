@@ -33,6 +33,14 @@ export default tseslint.config(
     },
   },
   {
+    files: ['*.config.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     ignores: ['dist/**', 'node_modules/**', 'src/components/ui/**'],
   },
 )

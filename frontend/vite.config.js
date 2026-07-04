@@ -16,8 +16,14 @@ export default defineConfig({
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {
+      // One entry per Vue island plus the global stylesheet; django-vite
+      // loads each via {% vite_asset %} so pages only ship the JS they use.
       input: {
-        app: resolve(__dirname, 'src/app/main.js'),
+        main: resolve(__dirname, 'src/entries/main.js'),
+        home: resolve(__dirname, 'src/entries/home.js'),
+        'post-feed': resolve(__dirname, 'src/entries/post-feed.js'),
+        'rss-link': resolve(__dirname, 'src/entries/rss-link.js'),
+        'theme-toggle': resolve(__dirname, 'src/entries/theme-toggle.js'),
       },
     },
   },

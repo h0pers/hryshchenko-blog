@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@700&display=swap');
+
+/* Styles used only by the home page template (cms/home_page.html). */
+
+/* Display face for the hero name: Unbounded 700 in all caps, an expanded
+   futuristic grotesque with rounded, tech-brand letterforms. */
+.hero-title {
+  font-family: 'Unbounded', 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* Managed by home.js: the footer is pinned to the viewport bottom but sits
+   translated just below it while the hero is on screen; once the hero is
+   scrolled past it slides up into view (and back down when returning). */
+.footer-sticky {
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.footer-sticky.footer-sticky-visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-sticky {
+    transition: none;
+  }
+}
+
+/* Pulsing square pinned to the hero picture's top-right corner, centered on
+   it so half of the square sits outside the image. */
+.hero-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--foreground);
+  transform: translate(50%, -50%);
+  animation: hero-dot-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes hero-dot-pulse {
+  0%,
+  100% {
+    transform: translate(50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(50%, -50%) scale(1.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-dot {
+    animation: none;
+  }
+}
