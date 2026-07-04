@@ -73,6 +73,8 @@ jobs:
         run: |
           {
             echo "GITHUB_REPOSITORY=${{ github.repository }}"
+            echo "COMPOSE_PROJECT_NAME=${{ github.event.repository.name }}"
+            echo "MY_DOMAIN=${{ vars.MY_DOMAIN }}"
             echo "DJANGO_ENV=production"
             echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
             echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
