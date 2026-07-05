@@ -84,6 +84,10 @@ jobs:
             echo "POSTGRES_PORT=5432"
             echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}"
             echo "CACHE_URL=redis://redis:6379/0"
+            echo "WAGTAIL_SITE_NAME=${{ vars.WAGTAIL_SITE_NAME }}"
+            echo "WAGTAILADMIN_BASE_URL=${{ vars.WAGTAILADMIN_BASE_URL }}"
+            echo "DJANGO_SERVER_EMAIL=${{ vars.DJANGO_SERVER_EMAIL }}"
+            echo "DJANGO_DEFAULT_FROM_EMAIL=${{ vars.DJANGO_DEFAULT_FROM_EMAIL }}"
             if [ -n "${{ secrets.DJANGO_SUPERUSER_USERNAME }}" ]; then
               echo "DJANGO_SUPERUSER_USERNAME=${{ secrets.DJANGO_SUPERUSER_USERNAME }}"
             fi
