@@ -1,0 +1,42 @@
+---
+// One listing page of post cards. The list advertises the next listing page
+// in data-next-page; the PostFeed island fetches it and appends its cards
+// (infinite scroll). Ported from blog/includes/post_list.html.
+import type { CollectionEntry } from 'astro:content'
+import { formatDate, isoDate, postUrl } from '@/lib/urls'
+
+interface Props {
+  posts: CollectionEntry<'blog'>[]
+  nextUrl?: string
+}
+
+const { posts, nextUrl } = Astro.props
+---
+
+<ul data-post-list data-next-page={nextUrl} class="divide-y divide-border">
+  {posts.map((post) => (
+    <li data-post-card>
+      <article class="py-10">
+        <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+        </p>
+        <h3 class="mt-2 font-display text-2xl font-semibold tracking-tight">
+          <a href={postUrl(post)} class="underline-offset-4 hover:underline">
+            {post.data.title}
+          </a>
+        </h3>
+        {post.data.excerpt && (
+          <p class="mt-3 leading-relaxed text-muted-foreground sm:max-w-[75%]">{post.data.excerpt}</p>
+        )}
+        {post.data.tags.length > 0 && (
+          <p class="mt-4 flex flex-wrap gap-x-4 text-sm text-muted-foreground">
+            {post.data.tags.map((tag) => (
+              <span>#{tag}</span>
+            ))}
+          </p>
+        )}
+      </article>
+    </li>
+  ))}
+  {posts.length === 0 && <li class="py-10 text-muted-foreground">No posts yet.</li>}
+</ul>

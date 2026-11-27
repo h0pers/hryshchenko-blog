@@ -1,0 +1,34 @@
+---
+// Listing pages 2..N (/page/2/, /page/3/, ...). The home page's PostFeed
+// island fetches these and appends their post cards; they also work as
+// plain pages for crawlers and no-JS visitors.
+import type { GetStaticPaths } from 'astro'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import PostList from '@/components/PostList.astro'
+import site from '@/data/site.json'
+import { getPublishedPosts, paginate } from '@/lib/posts'
+import { listingUrl } from '@/lib/urls'
+
+export const getStaticPaths = (async () => {
+  const pages = paginate(await getPublishedPosts())
+  return pages.slice(1).map((posts, i) => {
+    const page = i + 2
+    return {
+      params: { page: String(page) },
+      props: { posts, page, nextUrl: page < pages.length ? listingUrl(page + 1) : undefined },
+    }
+  })
+}) satisfies GetStaticPaths
+
+const { posts, page, nextUrl } = Astro.props
+---
+
+<BaseLayout title={`Writing - page ${page}`} description={site.description}>
+  <h2 class="text-xs font-medium uppercase tracking-widest text-muted-foreground">Writing</h2>
+  <PostList posts={posts} nextUrl={nextUrl} />
+  {nextUrl && (
+    <a href={nextUrl} class="mt-6 inline-block text-sm underline-offset-4 hover:underline">
+      Older posts
+    </a>
+  )}
+</BaseLayout>

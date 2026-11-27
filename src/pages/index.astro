@@ -1,0 +1,63 @@
+---
+// Landing page: profile hero plus the first page of posts. Ported from
+// cms/home_page.html.
+import { getEntry, render } from 'astro:content'
+import { Image } from 'astro:assets'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import PostList from '@/components/PostList.astro'
+import PostFeed from '@/islands/PostFeed.vue'
+import site from '@/data/site.json'
+import { getPublishedPosts, paginate } from '@/lib/posts'
+import { listingUrl } from '@/lib/urls'
+import '@/styles/home.css'
+
+const home = await getEntry('home', 'index')
+if (!home) throw new Error('Missing src/content/home/index.md')
+const { Content: Bio } = await render(home)
+const pages = paginate(await getPublishedPosts())
+const { name, title, picture, description } = home.data
+---
+
+<BaseLayout title={title} description={description ?? site.description} image={picture}>
+  <section
+    data-hero
+    class="@container grid min-h-[calc(100svh-6.5rem)] content-center justify-items-center gap-10 border-b border-border pb-16 text-center lg:grid-cols-[1fr_auto] lg:items-start lg:justify-items-start lg:gap-x-14 lg:text-left"
+  >
+    {picture && (
+      <div data-hero-image class="relative aspect-4/5 w-56 md:w-64 xl:w-80 lg:col-start-2 lg:row-start-2">
+        <div data-depth="0.4" class="absolute inset-0">
+          <Image
+            src={picture}
+            width={640}
+            height={800}
+            fit="cover"
+            alt={name ?? title}
+            loading="eager"
+            class="h-full w-full object-cover contrast-125"
+          />
+        </div>
+        <div data-depth="0.8" class="absolute inset-0">
+          <span class="hero-dot" aria-hidden="true" />
+        </div>
+      </div>
+    )}
+    <h1 class="hero-title text-[min(3.75rem,8.5cqw)] leading-none text-balance text-foreground lg:col-span-2 lg:text-[min(7rem,8.5cqw)]">
+      {name ?? title}
+    </h1>
+    {home.body?.trim() && (
+      <div class="prose prose-sm max-w-xl lg:col-start-1 lg:row-start-2">
+        <Bio />
+      </div>
+    )}
+  </section>
+
+  <section class="pt-16">
+    <h2 class="text-xs font-medium uppercase tracking-widest text-muted-foreground">Writing</h2>
+    <PostList posts={pages[0]} nextUrl={pages.length > 1 ? listingUrl(2) : undefined} />
+    <PostFeed client:visible />
+  </section>
+</BaseLayout>
+
+<script>
+  import '@/scripts/home.js'
+</script>

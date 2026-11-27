@@ -5,59 +5,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Common commands
 
 ```bash
-# Local dev with hot reload (mounts ./website into the container)
-docker compose -f docker-compose.debug.yml up --build
-
-# Build the dev-target image once (only needed when deps change)
-docker build --target development -t backend:test .
-
-# Full test suite (pytest + coverage via website/pytest.sh)
-docker compose -f docker-compose.test.yml run --rm test
-
-# Single test file
-docker compose -f docker-compose.test.yml run --rm test pytest apps/core/tests/test_something.py
-
-# Full suite with coverage report + XML (as CI does)
-docker compose -f docker-compose.test.yml run --rm test ./pytest.sh --ci
-
-# Lint/format (ruff)
-uvx ruff check .
-uvx ruff format .
-
-# Frontend run from frontend/
-npm run lint
-npm run lint:fix
-npm run format
-npm run build
+npm run dev            # dev server with hot reload (http://localhost:4321)
+npm run build          # static build into dist/
+npm run preview        # serve dist/
+npm run check          # astro check (types)
+npm run format         # prettier --write src
+npm run format:check   # what CI runs
 ```
 
-Production is smoke-tested locally with `docker compose up` (pulls the pre-built GHCR image; does not build from source).
+There is no test suite; CI (`.github/workflows/pages.yml`) runs `format:check`, `check` and `build`.
 
-### Settings architecture (django-split-settings)
+### Architecture
 
-`website/website/settings/__init__.py` is the actual `DJANGO_SETTINGS_MODULE`. It reads `DJANGO_ENV` (`development` / `production` / `test`, default `production`) and stitches settings together with `split_settings.tools.include`:
+Static Astro site deployed to GitHub Pages. It replaced a Django + Wagtail app (removed; see git history before the Astro migration), keeping its design, URLs (`/blog/<slug>/`, `/blog/rss.xml`) and Vue islands.
 
-1. `components/*.py` — shared building blocks (`base`, `database`, `security`, `email`, `logging`, `cache`, plus `rest_framework`/`cors` if `use_drf`, `wagtail` if `use_wagtail`, `vite` if `use_vue`). Included unconditionally in this fixed order.
-2. `environments/{development,production,test}.py` — included last, so it can override or append to anything a component defined (e.g. `production.py` does `MIDDLEWARE.append(...)`).
-
-Because these files are `include()`d into one shared namespace rather than imported as modules, names like `MIDDLEWARE`, `BASE_DIR`, or `env` are available in later files without importing them — don't add imports for names defined in an earlier component/environment file (ruff's per-file-ignores already silences `F821` for these directories for this reason).
-
-### App layout
-
-- `apps/core` — cross-cutting: health check API (`api/`), the production-only secure-headers middleware (`middleware.py`), and the one settings-mode test (`tests/test_django_mode.py`).
-- `apps/cms` — Wagtail pages/templates
-
-### Docker build
-
-`Dockerfile` is a multi-stage build: a shared `base` (uv + Python 3.11 Alpine) branches into `deps` (prod deps only) / `deps-dev` (all deps) and a shared `runtime` stage, producing final `development` and `production` targets. An additional `frontend-build` Node stage runs `npm run build` and its output (`static/dist`) is copied only into the `production` target — `development` relies on Vite's dev server instead (see `DJANGO_VITE["default"]["dev_mode"] = True` in `environments/development.py`).
-
-### CI/CD (generated project)
-
-- `ci.yml` — builds the `development` Docker target and runs `docker-compose.test.yml` on every push/PR.
-- `deploy.yml` — triggered by a successful CI run on `master`; builds+pushes the `production` image to GHCR, writes a `.env` from GitHub secrets, scp's it + `docker-compose.yml` to the VPS, then runs migrations and a `docker rollout` for zero-downtime restart.
-- `pre-commit.yml` — runs the ruff pre-commit hooks.
-- Per-server `GUNICORN_WORKERS`/`GUNICORN_TIMEOUT` are deliberately *not* templated into CI — they're set via a `docker-compose.override.yml` the operator creates directly on the VPS (see the generated project's `README.md`).
+- `src/content.config.ts` — content collections: `blog` (one Markdown file per post, file name = slug) and `home` (single `src/content/home/index.md`: name, picture, bio).
+- `src/data/site.json` — site title, author, email, footer links (formerly Wagtail `SiteSettings`).
+- `src/lib/posts.js` — `getPublishedPosts()` (drops drafts and future-dated posts, newest first) and `paginate()` with `POSTS_PER_PAGE`. Always use these rather than `getCollection('blog')` directly.
+- `src/lib/urls.js` — every internal link must go through `url()` / `postUrl()` / `listingUrl()` so the configured `base` is applied (the site may be served from `/<repo>/`).
+- Listing: `pages/index.astro` renders page 1, `pages/page/[page].astro` renders pages 2..N. `PostList.astro` puts the next page URL in `data-next-page`; the `PostFeed.vue` island fetches that page and appends its `[data-post-card]` elements (infinite scroll). Keep those data attributes intact.
+- Vue islands in `src/islands/`: `ThemeToggle` (`client:only`, touches `document`), `PostFeed` (`client:visible`), `RssLink` (no directive, rendered to static HTML). `src/components/ui/` is shadcn-vue generated code.
+- Plain scripts in `src/scripts/` (`main.js` page loader, `home.js` parallax + sticky footer) are bundled via `<script>` tags in the layout/page.
+- Sveltia CMS (npm `@sveltia/cms`, version pinned by the lockfile) is mounted by the bare page `src/pages/admin/index.astro` with the typed config in `src/cms/config.ts` (`load_config_file: false`, so there is no `config.yml`). When changing a content schema in `content.config.ts`, update the matching CMS fields too. Collection `media_folder`s are relative to the entry file (`../../assets/...`) so uploaded images land where Astro's `image()` resolves them. `/admin/` is excluded from the sitemap.
+- `astro.config.mjs` reads `SITE_URL` / `BASE_PATH` env vars, which the workflow fills from `actions/configure-pages`.
 
 ### Code style
 
-Ruff is configured in `pyproject.toml` (`target-version = py311`, rule set includes Django-specific `DJ` checks, `T20` bans stray prints, `dummy-variable-rgx` allows underscore-prefixed unused vars). `migrations` and `static` are excluded from linting.
+Prettier (`.prettierrc`: no semicolons, single quotes, 120 columns, `prettier-plugin-astro`). `src/components/ui/` is excluded via `.prettierignore`.
