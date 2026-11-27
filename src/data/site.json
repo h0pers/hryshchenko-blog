@@ -3,5 +3,18 @@
   "description": "Latest blog posts.",
   "author": "Dmytro Hryshchenko",
   "email": "",
-  "links": [{ "label": "GitHub", "url": "https://github.com/h0pers" }]
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/h0pers"
+    },
+    {
+      "label": "Linkedin",
+      "url": "https://www.linkedin.com/in/hryshchenko-dev/"
+    },
+    {
+      "label": "dmytrohryshchenkowork@gmail.com",
+      "url": "mailto:dmytrohryshchenkowork@gmail.com"
+    }
+  ]
 }
