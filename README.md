@@ -1,83 +1,62 @@
-# Django + Docker ❤️
+# hryshchenko blog
 
-## Local Development
+A static personal blog built with [Astro](https://astro.build), Vue islands and Tailwind CSS, hosted on GitHub Pages.
 
-### Debug (hot reload, mounts source)
+## Local development
 
-```bash
-docker compose -f docker-compose.debug.yml up --build
-```
-
-Backend available at `http://localhost`.
-
-### Tests
+Requires Node 24 (see `.nvmrc`).
 
 ```bash
-# Build test image first (only needed when deps change)
-docker build --target development -t backend:test .
-
-# Run full test suite
-docker compose -f docker-compose.test.yml run --rm test
-
-# Run specific test file
-docker compose -f docker-compose.test.yml run --rm test pytest apps/core/tests/test_something.py
-
-# Run with coverage
-docker compose -f docker-compose.test.yml run --rm test ./pytest.sh --ci
+npm install
+npm run dev        # http://localhost:4321 with hot reload
+npm run build      # static site into dist/
+npm run preview    # serve dist/ locally
+npm run check      # type-check .astro / .ts files
+npm run format     # prettier
 ```
 
-### Production (local smoke test)
+## Writing in the browser (Sveltia CMS)
 
-```bash
-# Uses pre-built image from GHCR - does not build locally
-docker compose up
-```
+The site has an editor at `/admin/` (e.g. `https://<your-site>/admin/`). It edits posts, the home page and site settings, and every save is a commit to `master`, which redeploys the site in a minute or two.
 
+Sign in with **Sign In Using Access Token**. Create the token once at GitHub → **Settings → Developer settings → Fine-grained tokens**:
+
+- Repository access: only `h0pers/hryshchenko-blog`
+- Permissions: **Contents: Read and write** (Metadata: read is added automatically)
+
+The token stays in that browser's local storage; sign out on shared computers. When running `npm run dev` locally in Chrome or Edge, **Work with Local Repository** edits the files on disk instead, without a token or commits.
+
+The CMS config is `src/cms/config.ts`; its fields must match the schemas in `src/content.config.ts`.
+
+## Writing a post by hand
+
+Add a Markdown file to `src/content/blog/`. The file name becomes the URL: `src/content/blog/my-post.md` is served at `/blog/my-post/`.
+
+```markdown
+---
+title: My post
+date: 2026-12-01
+excerpt: Short summary shown in the listing, RSS and search results.
+tags: [django, astro]
+heroImage: ../../assets/blog/my-post-hero.jpg # optional
+draft: false # true keeps it off the site
 ---
 
-## VPS First-Time Setup
-
-Before the first deploy, run these commands on the VPS to register the systemd service. This is a one-time manual step — the deploy workflow does not handle it.
-
-```bash
-REPO_NAME="$REPO_NAME"
-DEPLOY_USER=$VPS_USER   # the user set in VPS_USER GitHub secret
-APP_DIR="/home/$DEPLOY_USER/$REPO_NAME"
-
-sudo tee /etc/systemd/system/$REPO_NAME.service <<SERVICE
-[Unit]
-Description=$REPO_NAME
-After=docker.service network-online.target
-Requires=docker.service
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-WorkingDirectory=$APP_DIR
-ExecStart=/usr/bin/docker compose up -d
-ExecStop=/usr/bin/docker compose down
-TimeoutStartSec=300
-
-[Install]
-WantedBy=multi-user.target
-SERVICE
-
-sudo systemctl daemon-reload
-sudo systemctl enable $REPO_NAME.service
+Post body in Markdown. Code blocks, tables and images are supported.
 ```
 
-After this, all subsequent deploys are handled automatically by the GitHub Actions workflow on every push to `master`.
+- Put images in `src/assets/blog/` and reference them with a relative path; they are resized and converted at build time.
+- Posts with a future `date` are hidden until that day (the deploy workflow rebuilds the site daily).
+- Optional `seoTitle` and `description` override the title and excerpt in search/social previews.
+- The `sample-*.md` posts are placeholders; delete them once real posts exist.
 
-## Per-Server Runtime Configuration
+## Other content
 
-`GUNICORN_WORKERS` and `GUNICORN_TIMEOUT` are not deployed by CI - they are server-specific (depends on CPU/memory). Configure them once by creating `docker-compose.override.yml` on the server. Docker Compose merges it automatically and CI never overwrites it.
+- Home page name, picture and bio: `src/content/home/index.md`.
+- Site title, author, contact email and footer links: `src/data/site.json`.
 
-```yaml
-services:
-  backend:
-    environment:
-      - "GUNICORN_WORKERS=4"
-      - "GUNICORN_TIMEOUT=60"
-```
+## Deployment
 
-Adjust `GUNICORN_WORKERS` to `(2 * CPU cores) + 1`. If the file is absent, defaults (`2` workers, `60`s timeout) apply.
+`.github/workflows/pages.yml` checks formatting and types on every push and pull request, builds the site, and on `master` deploys it to GitHub Pages. It also runs daily for scheduled posts.
+
+One-time setup: in the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. For a custom domain, add it under the same page and create the DNS records GitHub shows; the build picks up the domain automatically.
