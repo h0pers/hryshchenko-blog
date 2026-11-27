@@ -1,7 +1,6 @@
 ---
 title: Home
 name: Dmytro Hryshchenko
-picture: ../../assets/home/picture.jpg
+picture: ../../assets/home/Dmytro Hryshchenko.jpg
+description: ''
 ---
-
-Short introduction shown next to the picture. Edit `src/content/home/index.md` to change it.
