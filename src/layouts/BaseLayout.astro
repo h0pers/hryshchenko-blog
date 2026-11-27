@@ -68,7 +68,7 @@ const year = new Date().getFullYear()
           hryshchenko
         </a>
         <div class="flex items-center gap-1">
-          <RssLink url={feedUrl} />
+          <RssLink url={url('/subscribe/')} />
           <div class="size-9">
             <ThemeToggle client:only="vue" />
           </div>

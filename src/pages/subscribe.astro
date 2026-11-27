@@ -1,0 +1,50 @@
+---
+// Human-friendly entry point for the RSS feed, linked from the header icon.
+// The feed itself stays at /blog/rss.xml for readers; GitHub Pages serves it
+// as application/xml, which phones show as raw XML, hence this page.
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import CopyField from '@/islands/CopyField.vue'
+import { feedUrl } from '@/lib/urls'
+
+const absoluteFeedUrl = new URL(feedUrl, Astro.site).href
+const encoded = encodeURIComponent(absoluteFeedUrl)
+
+const readers = [
+  { label: 'Feedly', href: `https://feedly.com/i/subscription/feed/${encoded}` },
+  { label: 'Inoreader', href: `https://www.inoreader.com/?add_feed=${encoded}` },
+]
+---
+
+<BaseLayout title="Subscribe" description="Follow new posts with any RSS reader.">
+  <section class="mx-auto max-w-xl py-12">
+    <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">RSS</p>
+    <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tighter">Subscribe</h1>
+    <p class="mt-6 leading-relaxed text-muted-foreground">
+      Get new posts in a feed reader as soon as they are published, without email or an account here. Add this address
+      to any RSS reader app:
+    </p>
+
+    <div class="mt-6">
+      <CopyField value={absoluteFeedUrl} label="Feed URL" client:visible />
+    </div>
+
+    <p class="mt-10 text-xs font-medium uppercase tracking-widest text-muted-foreground">Or subscribe with</p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      {readers.map((reader) => (
+        <a
+          href={reader.href}
+          target="_blank"
+          rel="noopener"
+          class="rounded-full border border-border px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+        >
+          {reader.label}
+        </a>
+      ))}
+    </div>
+
+    <p class="mt-10 text-sm leading-relaxed text-muted-foreground">
+      New to RSS? A feed reader collects updates from the sites you follow in one place, in the order they were
+      published. Feedly and Inoreader work in the browser and on phones; NetNewsWire is a free app for iPhone and Mac.
+    </p>
+  </section>
+</BaseLayout>
